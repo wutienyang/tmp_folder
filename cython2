@@ -1,0 +1,34 @@
+1. Write Cython codes in Python, named "helloworld.pyx":
+print("Hello World!")
+2. Create a compiler called "setup.py":
+from distutils.core import setup
+from Cython.Distutils import build_ext
+from distutils.extension import Extension
+
+setup(
+    cmdclass = {'build_ext': build_ext},
+    ext_modules = [Extension("helloworld", ["helloworld.pyx"])]
+)
+3. Compile Cython code using command:
+python setup.py build_ext --inplace
+This will generate a C file "helloworld.c" and a python lib "helloword.pyd" in folder "build/".
+
+4. You can test the lib with python codes ("test.py"):
+import helloworld
+5. Running "python test.py", you will get "Hello World!" printed!
+Issues:
+
+C compiler setup
+config "Lib\distutils\distutils.cfg" in python install folder:
+
+[build]
+compiler = msvc
+2. error "Unable to find vcvarsall.bat"
+
+find below line (around ln 292) in Lib\distutils\msvc9compiler.py
+
+VERSION = get_build_version()
+Change it to your VS version number, e.g. VS 2015:
+
+VERSION = 14.0
+(alternative: SET VS90COMNTOOLS=%VS140COMNTOOLS%)
