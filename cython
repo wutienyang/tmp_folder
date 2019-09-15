@@ -1,0 +1,43 @@
+http://www.voidcn.com/article/p-njsubhgl-bms.html
+
+2. 运行一个demo
+创建hellocython.pyx,内容如下：
+
+cdef extern from"stdio.h":
+    extern int printf(const char *format, ...) 
+def SayHello():
+    printf("hello,world\n")
+    return 0
+代码非常简单，就是调用了C函数printf打印hello,world
+3. 编译demo
+最方便的是利用python的Distutils，先在hellocython目录下创建Setup.py：
+
+from distutils.core import setup
+from distutils.extension import Extension
+from Cython.Build import cythonize
+ 
+setup(
+  name = 'hellocython',
+  ext_modules=cythonize([
+    Extension("hellocython", ["hellocython.pyx"]),
+    ]),
+)
+编译：在cmd进入Setup.py的目录，执行：
+
+python Setup.py build
+4. 安装
+编译目录下运行：
+
+python Setup.py install
+安装后，会将在build/lib.???目录下生成的hellocython.pyd拷贝到Lib/site-packages
+
+有时我们只是希望测试一下，并不希望安装，这时可以把build/lib.???目录下的hellocython.pyd拷贝到当前目录
+
+或者在import hellocython前执行脚本:
+
+import sys
+sys.path.append("pathof hellocython.pyd")
+5. 测试
+>>>import hellocython
+>>>hellocython.SayHello()
+hello,world
